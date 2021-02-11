@@ -92,7 +92,13 @@ public class Client {
 	}
 
 	public static void main(String[] args) {
-        new Client(Integer.parseInt(args[0]), Integer.parseInt(args[1]), args[2], Integer.parseInt(args[3]));
+		try{
+			new Client(Integer.parseInt(args[0]), Integer.parseInt(args[1]), args[2], Integer.parseInt(args[3]));
+		}
+		catch(NumberFormatException num){
+			System.out.println("NumberFormatException on Client: " + num.getMessage());
+		}
+        
     }
 }
 
