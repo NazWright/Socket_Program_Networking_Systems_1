@@ -30,44 +30,56 @@ public class Client {
 		   try {
             //connect to the server
             // create stream and add to on specified host (string) and port (int)
-            int counter = 5;
+            int correctGuess = (int) (Math.random() * ( maxVal - 1 + 1 ) + 1) ;
             Socket socket = new Socket(serverIp, port);
 
             DataInputStream fromServer = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
             DataOutputStream toServer = new DataOutputStream(socket.getOutputStream());
-            System.out.println("Sending " + maxVal + " to server.");
+            System.out.println("Sending maxval  " + maxVal + " to server.");
             
             //send equation to server
             toServer.writeInt(maxVal);
 
-            System.out.println("Sending " + numGuesses + " to server.");
+            System.out.println("Sending numGuesses  " + numGuesses + " to server.");
 
             toServer.writeInt(numGuesses);
 
-          while(numGuesses > 0){
+           boolean isGuessed = false;
+           String result = "";
 
+            do{
+            	int guess = fromServer.readInt();
+            	System.out.println("The servers guess was " + guess);
+            	if( guess == correctGuess){
+            		toServer.writeInt(0);
+            		isGuessed = true;
+            	}
+            	else if( guess < correctGuess ){
+            		toServer.writeInt(-1);
+            	}
+            	else{
+            		toServer.writeInt(1);
+            	}
+
+            	if(isGuessed){
+            		result = "Yes";
+            	}
+            	else{
+            		result = "No";
+            	}
+
+            	if(numGuesses == 1 || isGuessed ){
+            			System.out.println(
+            				"Magic Number: " + correctGuess + "\n" + "Guessed? : " + result
+            				);
+            			System.exit(0);    		
+            	}
+
+            	numGuesses--;
+            }
+            while( numGuesses > 0 );
             
 
-             numGuesses--;
-            
-            //get result from server
-            //int result = fromServer.readInt();
-
-            //System.out.print(" The server guess was " + result);
-
-           /* if(result == maxVal){
-            	toServer.writeInt(0);
-            }
-            else if( result < maxVal ){
-            	toServer.writeInt(-1);
-            }
-            else{
-            	toServer.writeInt(1);
-            }
-            
-            numGuesses--
-*/
-          }
 
 
 

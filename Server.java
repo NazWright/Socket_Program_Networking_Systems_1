@@ -37,18 +37,28 @@ public class Server {
 			while(true){
 				Socket socket = null;
 				try{
-					socket = server.accept();
-					System.out.println("------New Client Connected: " + socket);
-
+					// socket object to receive incoming client requests 
+                    socket = server.accept();
 						// obtaining input and out streams 
 		            dis = new DataInputStream(socket.getInputStream());
 		            dos = new DataOutputStream(socket.getOutputStream());
 
 		           //handle client here....
-		            int received = dis.readInt();
+		            int maxVal = dis.readInt();
 		            int guesses = dis.readInt();
-		            System.out.println("received " + received + "and" + guesses + " from client");
+		            System.out.println("received " + maxVal + "and" + guesses + " from client");
 
+		            do{
+		            	int inclusive = maxVal + 1; // add one to the max value to include it in the random gen
+		            	int guess = (int) (Math.random() * ( maxVal - 1 + 1 ) + 1) ;
+		            	dos.writeInt(guess);
+		            	System.out.println("My Guess is " + guess);
+
+		            	System.out.println("Client says: " + dis.readInt());
+		            	guesses--;
+		            }
+		            while( guesses > 0 );
+		            socket.close();
 		          
 				}
 				catch (Exception e) {
